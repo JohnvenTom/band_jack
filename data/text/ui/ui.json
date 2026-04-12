@@ -1,0 +1,26 @@
+{
+    "buttons": {
+        "hit": "要牌",
+        "stand": "停牌",
+        "double": "加倍",
+        "split": "分牌"
+    },
+    "chips": {
+        "10": "10",
+        "50": "50",
+        "100": "100",
+        "500": "500"
+    },
+    "scoreboard": {
+        "player": "玩家",
+        "dealer": "庄家",
+        "chips": "筹码"
+    },
+    "result": {
+        "win": "胜利！",
+        "lose": "失败...",
+        "draw": "平局",
+        "blackjack": "Blackjack!"
+    },
+    "bust": "爆牌！点数超过21"
+}

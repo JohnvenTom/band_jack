@@ -1,0 +1,13 @@
+{
+    "title": "游戏设置",
+    "bgm": "背景音乐",
+    "sfx": "音效",
+    "voice": "语音",
+    "animation": "动画效果",
+    "difficulty_easy": "简单",
+    "difficulty_normal": "普通",
+    "difficulty_hard": "困难",
+    "pause_continue": "继续游戏",
+    "pause_restart": "重新开始",
+    "pause_home": "返回主页"
+}
