@@ -130,13 +130,13 @@
 
 ### 在线游玩
 
-访问 [在线演示](#) 立即开始游戏。
+访问 [在线演示](https://johnventom.github.io/band_jack/) 立即开始游戏。
 
 ### 本地运行
 
 1. **克隆仓库**
    ```bash
-   git clone https://github.com/yourusername/bang-jack.git
+   git clone https://github.com/JohnvenTom/bang-jack.git
    cd bang-jack
    ```
 
