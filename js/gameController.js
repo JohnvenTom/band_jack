@@ -332,30 +332,6 @@ class GameController {
             });
             this.audioSystem.play('deal');
         }, dealDelay * 3);
-        
-        // 预加载接下来的几张牌，确保有足够的缓冲
-        setTimeout(() => {
-            this.preloadNextCards(5);
-        }, dealDelay * 4);
-    }
-
-    /**
-     * 预加载接下来的几张牌
-     * @param {number} count - 要预加载的牌数
-     * @returns {void}
-     * @description 预加载牌组顶部的几张牌，确保翻牌时图片已加载
-     */
-    preloadNextCards(count = 3) {
-        if (!this.cardSystem || !this.cardSystem.deck) return;
-        
-        const deck = this.cardSystem.deck;
-        const cardsToPreload = deck.slice(-count);
-        
-        console.log(`[GameController] 预加载接下来 ${cardsToPreload.length} 张牌...`);
-        
-        cardsToPreload.forEach(card => {
-            this.cardSystem.preloadCardImage(card);
-        });
     }
 
     /**
@@ -475,9 +451,6 @@ class GameController {
         });
         
         this.audioSystem.play('deal');
-        
-        // 预加载接下来的几张牌
-        this.preloadNextCards(3);
     }
 
     /**
@@ -953,9 +926,6 @@ class GameController {
                 }, 500);
             }
         });
-        
-        // 预加载接下来的几张牌
-        this.preloadNextCards(3);
     }
 
     /**
