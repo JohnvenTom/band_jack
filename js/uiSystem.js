@@ -11,100 +11,101 @@ class UISystem {
      * @param {Object} cardSystem - 卡牌系统实例
      * @description 初始化UI系统
      */
-    constructor(config, cardSystem) {
+    constructor(config, cardSystem, audioSystem) {
         this.config = config;
         this.cardSystem = cardSystem;
+        this.audioSystem = audioSystem;
         this.animationSystem = null;
         this.elements = {};
         this.animations = [];
         this.isAnimating = false;
         this.lastStampIndex = -1;
         this.stamps = [
-            '../assets/logo/stamp_001001.png',
-            '../assets/logo/stamp_001002.png',
-            '../assets/logo/stamp_001003.png',
-            '../assets/logo/stamp_001004.png',
-            '../assets/logo/stamp_001005.png',
-            '../assets/logo/stamp_001006.png',
-            '../assets/logo/stamp_001007.png',
-            '../assets/logo/stamp_001008.png',
-            '../assets/logo/stamp_001009.png',
-            '../assets/logo/stamp_001010.png',
-            '../assets/logo/stamp_001012.png',
-            '../assets/logo/stamp_001013.png',
-            '../assets/logo/stamp_001014.png',
-            '../assets/logo/stamp_001015.png',
-            '../assets/logo/stamp_001016.png',
-            '../assets/logo/stamp_001017.png',
-            '../assets/logo/stamp_001018.png',
-            '../assets/logo/stamp_001019.png',
-            '../assets/logo/stamp_001020.png',
-            '../assets/logo/stamp_002001.png',
-            '../assets/logo/stamp_002002.png',
-            '../assets/logo/stamp_002003.png',
-            '../assets/logo/stamp_002004.png',
-            '../assets/logo/stamp_002005.png',
-            '../assets/logo/stamp_002006.png',
-            '../assets/logo/stamp_002007.png',
-            '../assets/logo/stamp_002008.png',
-            '../assets/logo/stamp_002009.png',
-            '../assets/logo/stamp_002010.png',
-            '../assets/logo/stamp_002011.png',
-            '../assets/logo/stamp_002012.png',
-            '../assets/logo/stamp_003001.png',
-            '../assets/logo/stamp_003002.png',
-            '../assets/logo/stamp_003003.png',
-            '../assets/logo/stamp_003004.png',
-            '../assets/logo/stamp_003005.png',
-            '../assets/logo/stamp_003006.png',
-            '../assets/logo/stamp_003007.png',
-            '../assets/logo/stamp_003008.png',
-            '../assets/logo/stamp_003009.png',
-            '../assets/logo/stamp_003010.png',
-            '../assets/logo/stamp_003011.png',
-            '../assets/logo/stamp_003012.png',
-            '../assets/logo/stamp_004001.png',
-            '../assets/logo/stamp_004002.png',
-            '../assets/logo/stamp_004003.png',
-            '../assets/logo/stamp_004004.png',
-            '../assets/logo/stamp_004005.png',
-            '../assets/logo/stamp_004006.png',
-            '../assets/logo/stamp_004007.png',
-            '../assets/logo/stamp_004008.png',
-            '../assets/logo/stamp_004009.png',
-            '../assets/logo/stamp_004010.png',
-            '../assets/logo/stamp_004011.png',
-            '../assets/logo/stamp_004012.png',
-            '../assets/logo/stamp_004013.png',
-            '../assets/logo/stamp_005001.png',
-            '../assets/logo/stamp_005002.png',
-            '../assets/logo/stamp_005003.png',
-            '../assets/logo/stamp_005004.png',
-            '../assets/logo/stamp_005005.png',
-            '../assets/logo/stamp_005006.png',
-            '../assets/logo/stamp_005007.png',
-            '../assets/logo/stamp_005008.png',
-            '../assets/logo/stamp_005009.png',
-            '../assets/logo/stamp_005010.png',
-            '../assets/logo/stamp_005011.png',
-            '../assets/logo/stamp_005012.png',
-            '../assets/logo/stamp_005013.png',
-            '../assets/logo/stamp_005014.png',
-            '../assets/logo/stamp_005016.png'
+            './assets/logo/stamp_001001.png',
+            './assets/logo/stamp_001002.png',
+            './assets/logo/stamp_001003.png',
+            './assets/logo/stamp_001004.png',
+            './assets/logo/stamp_001005.png',
+            './assets/logo/stamp_001006.png',
+            './assets/logo/stamp_001007.png',
+            './assets/logo/stamp_001008.png',
+            './assets/logo/stamp_001009.png',
+            './assets/logo/stamp_001010.png',
+            './assets/logo/stamp_001012.png',
+            './assets/logo/stamp_001013.png',
+            './assets/logo/stamp_001014.png',
+            './assets/logo/stamp_001015.png',
+            './assets/logo/stamp_001016.png',
+            './assets/logo/stamp_001017.png',
+            './assets/logo/stamp_001018.png',
+            './assets/logo/stamp_001019.png',
+            './assets/logo/stamp_001020.png',
+            './assets/logo/stamp_002001.png',
+            './assets/logo/stamp_002002.png',
+            './assets/logo/stamp_002003.png',
+            './assets/logo/stamp_002004.png',
+            './assets/logo/stamp_002005.png',
+            './assets/logo/stamp_002006.png',
+            './assets/logo/stamp_002007.png',
+            './assets/logo/stamp_002008.png',
+            './assets/logo/stamp_002009.png',
+            './assets/logo/stamp_002010.png',
+            './assets/logo/stamp_002011.png',
+            './assets/logo/stamp_002012.png',
+            './assets/logo/stamp_003001.png',
+            './assets/logo/stamp_003002.png',
+            './assets/logo/stamp_003003.png',
+            './assets/logo/stamp_003004.png',
+            './assets/logo/stamp_003005.png',
+            './assets/logo/stamp_003006.png',
+            './assets/logo/stamp_003007.png',
+            './assets/logo/stamp_003008.png',
+            './assets/logo/stamp_003009.png',
+            './assets/logo/stamp_003010.png',
+            './assets/logo/stamp_003011.png',
+            './assets/logo/stamp_003012.png',
+            './assets/logo/stamp_004001.png',
+            './assets/logo/stamp_004002.png',
+            './assets/logo/stamp_004003.png',
+            './assets/logo/stamp_004004.png',
+            './assets/logo/stamp_004005.png',
+            './assets/logo/stamp_004006.png',
+            './assets/logo/stamp_004007.png',
+            './assets/logo/stamp_004008.png',
+            './assets/logo/stamp_004009.png',
+            './assets/logo/stamp_004010.png',
+            './assets/logo/stamp_004011.png',
+            './assets/logo/stamp_004012.png',
+            './assets/logo/stamp_004013.png',
+            './assets/logo/stamp_005001.png',
+            './assets/logo/stamp_005002.png',
+            './assets/logo/stamp_005003.png',
+            './assets/logo/stamp_005004.png',
+            './assets/logo/stamp_005005.png',
+            './assets/logo/stamp_005006.png',
+            './assets/logo/stamp_005007.png',
+            './assets/logo/stamp_005008.png',
+            './assets/logo/stamp_005009.png',
+            './assets/logo/stamp_005010.png',
+            './assets/logo/stamp_005011.png',
+            './assets/logo/stamp_005012.png',
+            './assets/logo/stamp_005013.png',
+            './assets/logo/stamp_005014.png',
+            './assets/logo/stamp_005016.png'
         ];
         this.stampAudios = {
-            '../assets/logo/stamp_001016.png': '../assets/logo/stamp_001016.mp3',
-            '../assets/logo/stamp_001017.png': '../assets/logo/stamp_001017.mp3',
-            '../assets/logo/stamp_001019.png': '../assets/logo/stamp_001019.mp3',
-            '../assets/logo/stamp_002011.png': '../assets/logo/stamp_002011.mp3',
-            '../assets/logo/stamp_002012.png': '../assets/logo/stamp_002012.mp3',
-            '../assets/logo/stamp_003009.png': '../assets/logo/stamp_003009.mp3',
-            '../assets/logo/stamp_003010.png': '../assets/logo/stamp_003010.mp3',
-            '../assets/logo/stamp_003011.png': '../assets/logo/stamp_003011.mp3',
-            '../assets/logo/stamp_004011.png': '../assets/logo/stamp_004011.mp3',
-            '../assets/logo/stamp_004012.png': '../assets/logo/stamp_004012.mp3',
-            '../assets/logo/stamp_005013.png': '../assets/logo/stamp_005013.mp3',
-            '../assets/logo/stamp_005014.png': '../assets/logo/stamp_005014.mp3'
+            './assets/logo/stamp_001016.png': './assets/logo/stamp_001016.mp3',
+            './assets/logo/stamp_001017.png': './assets/logo/stamp_001017.mp3',
+            './assets/logo/stamp_001019.png': './assets/logo/stamp_001019.mp3',
+            './assets/logo/stamp_002011.png': './assets/logo/stamp_002011.mp3',
+            './assets/logo/stamp_002012.png': './assets/logo/stamp_002012.mp3',
+            './assets/logo/stamp_003009.png': './assets/logo/stamp_003009.mp3',
+            './assets/logo/stamp_003010.png': './assets/logo/stamp_003010.mp3',
+            './assets/logo/stamp_003011.png': './assets/logo/stamp_003011.mp3',
+            './assets/logo/stamp_004011.png': './assets/logo/stamp_004011.mp3',
+            './assets/logo/stamp_004012.png': './assets/logo/stamp_004012.mp3',
+            './assets/logo/stamp_005013.png': './assets/logo/stamp_005013.mp3',
+            './assets/logo/stamp_005014.png': './assets/logo/stamp_005014.mp3'
         };
     }
 
@@ -201,8 +202,15 @@ class UISystem {
             </div>
         `;
         
+        const settingsBtn = document.createElement('button');
+        settingsBtn.className = 'settings-btn';
+        settingsBtn.id = 'settings-btn';
+        settingsBtn.innerHTML = '<i class="ph ph-gear" style="font-size: 20px;"></i>';
+        settingsBtn.title = '设置';
+        
         scoreboard.appendChild(chipsDisplay);
         scoreboard.appendChild(statsDisplay);
+        scoreboard.appendChild(settingsBtn);
         
         this.elements.scoreboard = scoreboard;
         return scoreboard;
@@ -372,6 +380,122 @@ class UISystem {
     }
 
     /**
+     * 显示音量设置弹窗
+     * @param {Object} currentVolumes - 当前音量设置
+     * @param {Function} onVolumeChange - 音量变化回调
+     * @param {boolean} kasumiWinSound - 香澄胜利音效开关
+     * @param {Function} onKasumiWinSoundChange - 香澄胜利音效开关变化回调
+     * @returns {void}
+     * @description 显示音量设置界面
+     */
+    showVolumeSettings(currentVolumes, onVolumeChange, kasumiWinSound, onKasumiWinSoundChange) {
+        const existingSettings = document.getElementById('volume-settings');
+        if (existingSettings) return;
+
+        const overlay = document.createElement('div');
+        overlay.className = 'settings-overlay';
+        overlay.id = 'volume-settings';
+
+        const settingsPanel = document.createElement('div');
+        settingsPanel.className = 'settings-panel';
+        settingsPanel.innerHTML = `
+            <div class="settings-header">
+                <h3><i class="ph ph-speaker-high" style="margin-right: 8px;"></i>音量设置</h3>
+                <button class="settings-close" id="settings-close-btn">×</button>
+            </div>
+            <div class="settings-content">
+                <div class="volume-item">
+                    <label class="volume-label">背景音乐</label>
+                    <div class="volume-control">
+                        <input type="range" class="volume-slider" id="bgm-slider" 
+                               min="0" max="100" value="${(typeof currentVolumes.bgm === 'number' ? currentVolumes.bgm : 0.5) * 100}">
+                        <span class="volume-value" id="bgm-value">${Math.round((typeof currentVolumes.bgm === 'number' ? currentVolumes.bgm : 0.5) * 100)}%</span>
+                    </div>
+                </div>
+                <div class="volume-item">
+                    <label class="volume-label">音效</label>
+                    <div class="volume-control">
+                        <input type="range" class="volume-slider" id="sfx-slider" 
+                               min="0" max="100" value="${(typeof currentVolumes.sfx === 'number' ? currentVolumes.sfx : 0.5) * 100}">
+                        <span class="volume-value" id="sfx-value">${Math.round((typeof currentVolumes.sfx === 'number' ? currentVolumes.sfx : 0.5) * 100)}%</span>
+                    </div>
+                </div>
+                <div class="volume-item">
+                    <label class="volume-label">语音</label>
+                    <div class="volume-control">
+                        <input type="range" class="volume-slider" id="voice-slider" 
+                               min="0" max="100" value="${(typeof currentVolumes.voice === 'number' ? currentVolumes.voice : 0.5) * 100}">
+                        <span class="volume-value" id="voice-value">${Math.round((typeof currentVolumes.voice === 'number' ? currentVolumes.voice : 0.5) * 100)}%</span>
+                    </div>
+                </div>
+                <div class="volume-item">
+                    <label class="volume-label">表情包语音</label>
+                    <div class="volume-control">
+                        <input type="range" class="volume-slider" id="stamp-slider" 
+                               min="0" max="100" value="${(typeof currentVolumes.stamp === 'number' ? currentVolumes.stamp : 0.5) * 100}">
+                        <span class="volume-value" id="stamp-value">${Math.round((typeof currentVolumes.stamp === 'number' ? currentVolumes.stamp : 0.5) * 100)}%</span>
+                    </div>
+                </div>
+                <div class="toggle-item">
+                    <label class="toggle-label">香澄胜利音效</label>
+                    <div class="toggle-control">
+                        <div class="toggle-switch ${kasumiWinSound ? 'active' : ''}" id="kasumi-toggle">
+                            <div class="toggle-thumb"></div>
+                        </div>
+                        <span class="toggle-value" id="kasumi-value">${kasumiWinSound ? '开启' : '关闭'}</span>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        overlay.appendChild(settingsPanel);
+        document.body.appendChild(overlay);
+
+        requestAnimationFrame(() => {
+            overlay.classList.add('show');
+            settingsPanel.classList.add('show');
+        });
+
+        const closeSettings = () => {
+            overlay.classList.remove('show');
+            settingsPanel.classList.remove('show');
+            setTimeout(() => overlay.remove(), 300);
+        };
+
+        document.getElementById('settings-close-btn').addEventListener('click', closeSettings);
+        overlay.addEventListener('click', (e) => {
+            if (e.target === overlay) closeSettings();
+        });
+
+        ['bgm', 'sfx', 'voice', 'stamp'].forEach(type => {
+            const slider = document.getElementById(`${type}-slider`);
+            const valueDisplay = document.getElementById(`${type}-value`);
+            
+            if (slider) {
+                slider.addEventListener('input', (e) => {
+                    const value = e.target.value / 100;
+                    valueDisplay.textContent = `${e.target.value}%`;
+                    if (onVolumeChange) {
+                        onVolumeChange(type, value);
+                    }
+                });
+            }
+        });
+
+        const kasumiToggle = document.getElementById('kasumi-toggle');
+        const kasumiValue = document.getElementById('kasumi-value');
+        if (kasumiToggle) {
+            kasumiToggle.addEventListener('click', () => {
+                const isActive = kasumiToggle.classList.toggle('active');
+                kasumiValue.textContent = isActive ? '开启' : '关闭';
+                if (onKasumiWinSoundChange) {
+                    onKasumiWinSoundChange(isActive);
+                }
+            });
+        }
+    }
+
+    /**
      * 绑定事件
      * @returns {void}
      * @description 绑定UI交互事件
@@ -386,8 +510,16 @@ class UISystem {
             });
         }
         
+        const settingsBtn = document.getElementById('settings-btn');
+        if (settingsBtn) {
+            settingsBtn.addEventListener('click', () => {
+                const event = new CustomEvent('openSettings');
+                document.dispatchEvent(event);
+            });
+        }
+        
         document.addEventListener('click', (e) => {
-            const isInteractive = e.target.closest('button, .game-btn, .chip, .card, .stacked-chip, .welcome-btn, .result-popup, .drawer-overlay, .message-toast, .controls-area, .chip-selector');
+            const isInteractive = e.target.closest('button, .game-btn, .chip, .card, .stacked-chip, .welcome-btn, .result-popup, .drawer-overlay, .message-toast, .controls-area, .chip-selector, .settings-btn, .settings-overlay');
             if (!isInteractive) {
                 this.showRandomStamp(e.clientX, e.clientY);
             }
@@ -429,10 +561,16 @@ class UISystem {
         
         document.body.appendChild(stamp);
         
-        if (this.stampAudios[stampPath]) {
-            const audio = new Audio(this.stampAudios[stampPath]);
-            audio.volume = 0.5;
-            audio.play().catch(() => {});
+        if (this.audioSystem) {
+            if (this.audioSystem.volumes.stamp > 0 && this.stampAudios[stampPath]) {
+                const audio = new Audio(this.stampAudios[stampPath]);
+                audio.volume = this.audioSystem.volumes.stamp;
+                audio.play().catch(() => {});
+            } else {
+                const popSound = new Audio('./assets/audio/sfx/short/SE_POPS_OUT.mp3');
+                popSound.volume = this.audioSystem.volumes.sfx;
+                popSound.play().catch(() => {});
+            }
         }
         
         setTimeout(() => {
@@ -876,9 +1014,15 @@ class UISystem {
         
         const title = document.createElement('h2');
         title.className = 'result-title';
-        title.textContent = result.isBlackjack ? 'BANG JACK!' : 
-            (result.type === 'win' ? '🎉 胜利! 🎉' : 
-            (result.type === 'lose' ? '失败...' : '平局'));
+        if (result.isBlackjack) {
+            title.innerHTML = 'BANG JACK!';
+        } else if (result.type === 'win') {
+            title.innerHTML = '<i class="ph ph-trophy" style="margin-right: 8px;"></i>胜利! <i class="ph ph-trophy" style="margin-left: 8px;"></i>';
+        } else if (result.type === 'lose') {
+            title.textContent = '失败...';
+        } else {
+            title.textContent = '平局';
+        }
         
         const message = document.createElement('p');
         message.className = 'result-message';

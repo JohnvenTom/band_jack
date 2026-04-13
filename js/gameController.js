@@ -45,9 +45,9 @@ class GameController {
         this.aiDealer = new AIDealer(this.config, this.difficulty);
         this.economySystem = new EconomySystem(this.config);
         this.animationSystem = new AnimationSystem(this.config);
-        this.uiSystem = new UISystem(this.config, this.cardSystem);
-        this.uiSystem.setAnimationSystem(this.animationSystem);
         this.audioSystem = new AudioSystem(this.config);
+        this.uiSystem = new UISystem(this.config, this.cardSystem, this.audioSystem);
+        this.uiSystem.setAnimationSystem(this.animationSystem);
         this.saveSystem = new SaveSystem(this.config);
         
         this.uiSystem.init();
@@ -107,6 +107,58 @@ class GameController {
         document.addEventListener('click', () => {
             this.audioSystem.resumeContext();
         }, { once: true });
+
+        document.addEventListener('openSettings', () => {
+            this.openVolumeSettings();
+        });
+    }
+
+    /**
+     * 打开音量设置
+     * @returns {void}
+     * @description 显示音量设置弹窗
+     */
+    openVolumeSettings() {
+        const currentVolumes = {
+            bgm: this.audioSystem.volumes.bgm,
+            sfx: this.audioSystem.volumes.sfx,
+            voice: this.audioSystem.volumes.voice,
+            stamp: this.audioSystem.volumes.stamp
+        };
+
+        this.uiSystem.showVolumeSettings(
+            currentVolumes, 
+            (type, value) => {
+                this.handleVolumeChange(type, value);
+            },
+            this.audioSystem.kasumiWinSound,
+            (enabled) => {
+                this.handleKasumiWinSoundChange(enabled);
+            }
+        );
+    }
+
+    /**
+     * 处理音量变化
+     * @param {string} type - 音量类型 (bgm/sfx/voice)
+     * @param {number} value - 音量值 (0-1)
+     * @returns {void}
+     * @description 更新音量设置并保存
+     */
+    handleVolumeChange(type, value) {
+        this.audioSystem.setVolume(type, value);
+        this.saveGame();
+    }
+
+    /**
+     * 处理香澄胜利音效开关变化
+     * @param {boolean} enabled - 是否启用
+     * @returns {void}
+     * @description 更新香澄胜利音效设置并保存
+     */
+    handleKasumiWinSoundChange(enabled) {
+        this.audioSystem.setKasumiWinSound(enabled);
+        this.saveGame();
     }
 
     /**
@@ -1078,77 +1130,77 @@ class GameController {
      */
     getRandomLogo() {
         const logos = [
-            '../assets/logo/stamp_001001.png',
-            '../assets/logo/stamp_001002.png',
-            '../assets/logo/stamp_001003.png',
-            '../assets/logo/stamp_001004.png',
-            '../assets/logo/stamp_001005.png',
-            '../assets/logo/stamp_001006.png',
-            '../assets/logo/stamp_001007.png',
-            '../assets/logo/stamp_001008.png',
-            '../assets/logo/stamp_001009.png',
-            '../assets/logo/stamp_001010.png',
-            '../assets/logo/stamp_001012.png',
-            '../assets/logo/stamp_001013.png',
-            '../assets/logo/stamp_001014.png',
-            '../assets/logo/stamp_001015.png',
-            '../assets/logo/stamp_001016.png',
-            '../assets/logo/stamp_001017.png',
-            '../assets/logo/stamp_001018.png',
-            '../assets/logo/stamp_001019.png',
-            '../assets/logo/stamp_001020.png',
-            '../assets/logo/stamp_002001.png',
-            '../assets/logo/stamp_002002.png',
-            '../assets/logo/stamp_002003.png',
-            '../assets/logo/stamp_002004.png',
-            '../assets/logo/stamp_002005.png',
-            '../assets/logo/stamp_002006.png',
-            '../assets/logo/stamp_002007.png',
-            '../assets/logo/stamp_002008.png',
-            '../assets/logo/stamp_002009.png',
-            '../assets/logo/stamp_002010.png',
-            '../assets/logo/stamp_002011.png',
-            '../assets/logo/stamp_002012.png',
-            '../assets/logo/stamp_003001.png',
-            '../assets/logo/stamp_003002.png',
-            '../assets/logo/stamp_003003.png',
-            '../assets/logo/stamp_003004.png',
-            '../assets/logo/stamp_003005.png',
-            '../assets/logo/stamp_003006.png',
-            '../assets/logo/stamp_003007.png',
-            '../assets/logo/stamp_003008.png',
-            '../assets/logo/stamp_003009.png',
-            '../assets/logo/stamp_003010.png',
-            '../assets/logo/stamp_003011.png',
-            '../assets/logo/stamp_003012.png',
-            '../assets/logo/stamp_004001.png',
-            '../assets/logo/stamp_004002.png',
-            '../assets/logo/stamp_004003.png',
-            '../assets/logo/stamp_004004.png',
-            '../assets/logo/stamp_004005.png',
-            '../assets/logo/stamp_004006.png',
-            '../assets/logo/stamp_004007.png',
-            '../assets/logo/stamp_004008.png',
-            '../assets/logo/stamp_004009.png',
-            '../assets/logo/stamp_004010.png',
-            '../assets/logo/stamp_004011.png',
-            '../assets/logo/stamp_004012.png',
-            '../assets/logo/stamp_004013.png',
-            '../assets/logo/stamp_005001.png',
-            '../assets/logo/stamp_005002.png',
-            '../assets/logo/stamp_005003.png',
-            '../assets/logo/stamp_005004.png',
-            '../assets/logo/stamp_005005.png',
-            '../assets/logo/stamp_005006.png',
-            '../assets/logo/stamp_005007.png',
-            '../assets/logo/stamp_005008.png',
-            '../assets/logo/stamp_005009.png',
-            '../assets/logo/stamp_005010.png',
-            '../assets/logo/stamp_005011.png',
-            '../assets/logo/stamp_005012.png',
-            '../assets/logo/stamp_005013.png',
-            '../assets/logo/stamp_005014.png',
-            '../assets/logo/stamp_005016.png'
+            './assets/logo/stamp_001001.png',
+            './assets/logo/stamp_001002.png',
+            './assets/logo/stamp_001003.png',
+            './assets/logo/stamp_001004.png',
+            './assets/logo/stamp_001005.png',
+            './assets/logo/stamp_001006.png',
+            './assets/logo/stamp_001007.png',
+            './assets/logo/stamp_001008.png',
+            './assets/logo/stamp_001009.png',
+            './assets/logo/stamp_001010.png',
+            './assets/logo/stamp_001012.png',
+            './assets/logo/stamp_001013.png',
+            './assets/logo/stamp_001014.png',
+            './assets/logo/stamp_001015.png',
+            './assets/logo/stamp_001016.png',
+            './assets/logo/stamp_001017.png',
+            './assets/logo/stamp_001018.png',
+            './assets/logo/stamp_001019.png',
+            './assets/logo/stamp_001020.png',
+            './assets/logo/stamp_002001.png',
+            './assets/logo/stamp_002002.png',
+            './assets/logo/stamp_002003.png',
+            './assets/logo/stamp_002004.png',
+            './assets/logo/stamp_002005.png',
+            './assets/logo/stamp_002006.png',
+            './assets/logo/stamp_002007.png',
+            './assets/logo/stamp_002008.png',
+            './assets/logo/stamp_002009.png',
+            './assets/logo/stamp_002010.png',
+            './assets/logo/stamp_002011.png',
+            './assets/logo/stamp_002012.png',
+            './assets/logo/stamp_003001.png',
+            './assets/logo/stamp_003002.png',
+            './assets/logo/stamp_003003.png',
+            './assets/logo/stamp_003004.png',
+            './assets/logo/stamp_003005.png',
+            './assets/logo/stamp_003006.png',
+            './assets/logo/stamp_003007.png',
+            './assets/logo/stamp_003008.png',
+            './assets/logo/stamp_003009.png',
+            './assets/logo/stamp_003010.png',
+            './assets/logo/stamp_003011.png',
+            './assets/logo/stamp_003012.png',
+            './assets/logo/stamp_004001.png',
+            './assets/logo/stamp_004002.png',
+            './assets/logo/stamp_004003.png',
+            './assets/logo/stamp_004004.png',
+            './assets/logo/stamp_004005.png',
+            './assets/logo/stamp_004006.png',
+            './assets/logo/stamp_004007.png',
+            './assets/logo/stamp_004008.png',
+            './assets/logo/stamp_004009.png',
+            './assets/logo/stamp_004010.png',
+            './assets/logo/stamp_004011.png',
+            './assets/logo/stamp_004012.png',
+            './assets/logo/stamp_004013.png',
+            './assets/logo/stamp_005001.png',
+            './assets/logo/stamp_005002.png',
+            './assets/logo/stamp_005003.png',
+            './assets/logo/stamp_005004.png',
+            './assets/logo/stamp_005005.png',
+            './assets/logo/stamp_005006.png',
+            './assets/logo/stamp_005007.png',
+            './assets/logo/stamp_005008.png',
+            './assets/logo/stamp_005009.png',
+            './assets/logo/stamp_005010.png',
+            './assets/logo/stamp_005011.png',
+            './assets/logo/stamp_005012.png',
+            './assets/logo/stamp_005013.png',
+            './assets/logo/stamp_005014.png',
+            './assets/logo/stamp_005016.png'
         ];
         return logos[Math.floor(Math.random() * logos.length)];
     }
@@ -1163,12 +1215,12 @@ class GameController {
         welcome.className = 'welcome-overlay';
         welcome.innerHTML = `
             <div class="welcome-decorations">
-                <span class="welcome-decoration">🎵</span>
-                <span class="welcome-decoration">🎸</span>
-                <span class="welcome-decoration">🎹</span>
-                <span class="welcome-decoration">🎤</span>
-                <span class="welcome-decoration">🥁</span>
-                <span class="welcome-decoration">✨</span>
+                <span class="welcome-decoration"><i class="ph ph-music-notes"></i></span>
+                <span class="welcome-decoration"><i class="ph ph-guitar"></i></span>
+                <span class="welcome-decoration"><i class="ph ph-piano-keys"></i></span>
+                <span class="welcome-decoration"><i class="ph ph-microphone-stage"></i></span>
+                <span class="welcome-decoration"><i class="ph ph-drum"></i></span>
+                <span class="welcome-decoration"><i class="ph ph-sparkle"></i></span>
             </div>
             <div class="welcome-content">
                 <div class="welcome-logo"><img src="${this.getRandomLogo()}" alt="Logo"></div>
@@ -1177,21 +1229,21 @@ class GameController {
                 
                 <div class="welcome-features">
                     <div class="welcome-feature">
-                        <div class="welcome-feature-icon">🎯</div>
+                        <div class="welcome-feature-icon"><i class="ph ph-target"></i></div>
                         <div class="welcome-feature-text">
                             <h4>目标goat</h4>
                             <p>让手牌点数接近21点，但小心不能超过了!</p>
                         </div>
                     </div>
                     <div class="welcome-feature">
-                        <div class="welcome-feature-icon">⭐</div>
+                        <div class="welcome-feature-icon"><i class="ph ph-star"></i></div>
                         <div class="welcome-feature-text">
                             <h4>特殊奖励</h4>
                             <p>A+10/J/Q/K 可获得 2.5 倍奖励</p>
                         </div>
                     </div>
                     <div class="welcome-feature">
-                        <div class="welcome-feature-icon">🎨</div>
+                        <div class="welcome-feature-icon"><i class="ph ph-palette"></i></div>
                         <div class="welcome-feature-text">
                             <h4>超多卡面</h4>
                             <p>邦邦卡牌封面设计</p>
@@ -1244,21 +1296,21 @@ class GameController {
                 <h2>游戏教程</h2>
                 <div class="tutorial-steps">
                     <div class="tutorial-step">
-                        <h3>🎯 游戏目标</h3>
+                        <h3><i class="ph ph-target" style="margin-right: 8px;"></i>游戏目标</h3>
                         <p>让手牌点数尽可能接近21点，但不能超过！</p>
                     </div>
                     <div class="tutorial-step">
-                        <h3>🃏 卡牌点数</h3>
+                        <h3><i class="ph ph-cards" style="margin-right: 8px;"></i>卡牌点数</h3>
                         <p>A = 1或11点 | 2-10 = 牌面值 | J/Q/K = 10点</p>
                     </div>
                     <div class="tutorial-step">
-                        <h3>🎮 操作说明</h3>
+                        <h3><i class="ph ph-game-controller" style="margin-right: 8px;"></i>操作说明</h3>
                         <p><strong>要牌(H)</strong> - 获得一张新牌</p>
                         <p><strong>停牌(S)</strong> - 结束回合</p>
                         <p><strong>加倍(D)</strong> - 双倍下注，仅得一张牌</p>
                     </div>
                     <div class="tutorial-step">
-                        <h3>⭐ 特殊奖励</h3>
+                        <h3><i class="ph ph-star" style="margin-right: 8px;"></i>特殊奖励</h3>
                         <p>Blackjack (A + 10点牌) = 2.5倍奖励！</p>
                     </div>
                 </div>

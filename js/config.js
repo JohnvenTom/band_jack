@@ -86,19 +86,21 @@ const CONFIG = {
     },
     
     PATHS: {
-        CARDS: '../assets/art/cards/',
-        FACES: '../assets/art/cards/faces/',
-        NUMBERS: '../assets/art/cards/numbers/',
-        UI: '../assets/art/ui/',
-        AUDIO: '../assets/audio/',
-        FONTS: '../assets/fonts/'
+        CARDS: './assets/art/cards/',
+        FACES: './assets/art/cards/faces/',
+        NUMBERS: './assets/art/cards/numbers/',
+        UI: './assets/art/ui/',
+        AUDIO: './assets/audio/',
+        FONTS: './assets/fonts/'
     },
     
     AUDIO: {
         ENABLED: true,
         BGM_VOLUME: 0.5,
         SFX_VOLUME: 0.7,
-        VOICE_VOLUME: 0.8
+        VOICE_VOLUME: 0.8,
+        KASUMI_WIN_SOUND: true,
+        STAMP_VOLUME: 0.5
     },
     
     STORAGE: {

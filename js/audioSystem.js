@@ -19,8 +19,10 @@ class AudioSystem {
         this.volumes = {
             bgm: config.AUDIO.BGM_VOLUME,
             sfx: config.AUDIO.SFX_VOLUME,
-            voice: config.AUDIO.VOICE_VOLUME
+            voice: config.AUDIO.VOICE_VOLUME,
+            stamp: config.AUDIO.STAMP_VOLUME
         };
+        this.kasumiWinSound = config.AUDIO.KASUMI_WIN_SOUND;
         this.initialized = false;
         
         this.lastPlayedIndex = {
@@ -32,65 +34,65 @@ class AudioSystem {
         
         this.soundPaths = {
             win: [
-                '../assets/audio/sfx/win/SE_ARISA_KY.mp3',
-                '../assets/audio/sfx/win/SE_FANFARE.mp3',
-                '../assets/audio/sfx/win/SE_KAORU_RADIO.mp3',
-                '../assets/audio/sfx/win/SE_KASUMI_GT.mp3',
-                '../assets/audio/sfx/win/SE_KEYBOARD_02.mp3',
-                '../assets/audio/sfx/win/SE_SAYA_DR.mp3',
-                '../assets/audio/sfx/win/SE_SAYO_GUITAR1.mp3',
-                '../assets/audio/sfx/win/SE_SHOCKING_SUCCESS.mp3',
-                '../assets/audio/sfx/win/SE_STRUM_GUITAR.mp3',
-                '../assets/audio/sfx/win/SE_STRUM_KY.mp3',
-                '../assets/audio/sfx/win/SE_TAE_GT.mp3'
+                './assets/audio/sfx/win/SE_ARISA_KY.mp3',
+                './assets/audio/sfx/win/SE_FANFARE.mp3',
+                './assets/audio/sfx/win/SE_KAORU_RADIO.mp3',
+                './assets/audio/sfx/win/SE_KASUMI_GT.mp3',
+                './assets/audio/sfx/win/SE_KEYBOARD_02.mp3',
+                './assets/audio/sfx/win/SE_SAYA_DR.mp3',
+                './assets/audio/sfx/win/SE_SAYO_GUITAR1.mp3',
+                './assets/audio/sfx/win/SE_SHOCKING_SUCCESS.mp3',
+                './assets/audio/sfx/win/SE_STRUM_GUITAR.mp3',
+                './assets/audio/sfx/win/SE_STRUM_KY.mp3',
+                './assets/audio/sfx/win/SE_TAE_GT.mp3'
             ],
             winShout: [
-                '../assets/audio/sfx/win/shout/SE_AUDIENCE_BIG_SHORT.mp3',
-                '../assets/audio/sfx/win/shout/SE_CHEER_BIG_2.mp3',
-                '../assets/audio/sfx/win/shout/SE_CHEER_BIG_WOMAN.mp3',
-                '../assets/audio/sfx/win/shout/SE_CLAPS_MID_SHORT.mp3',
-                '../assets/audio/sfx/win/shout/SE_CLAPS_SML_CHEER_FAR.mp3',
-                '../assets/audio/sfx/win/shout/SE_GAYA_WOMEN_2.mp3',
-                '../assets/audio/sfx/win/shout/SE_LAUFH_WOMEN.mp3',
-                '../assets/audio/sfx/win/shout/SE_RHYTHM_CLEAR_VO.mp3',
-                '../assets/audio/sfx/win/shout/SE_SHOUT.mp3'
+                './assets/audio/sfx/win/shout/SE_AUDIENCE_BIG_SHORT.mp3',
+                './assets/audio/sfx/win/shout/SE_CHEER_BIG_2.mp3',
+                './assets/audio/sfx/win/shout/SE_CHEER_BIG_WOMAN.mp3',
+                './assets/audio/sfx/win/shout/SE_CLAPS_MID_SHORT.mp3',
+                './assets/audio/sfx/win/shout/SE_CLAPS_SML_CHEER_FAR.mp3',
+                './assets/audio/sfx/win/shout/SE_GAYA_WOMEN_2.mp3',
+                './assets/audio/sfx/win/shout/SE_LAUFH_WOMEN.mp3',
+                './assets/audio/sfx/win/shout/SE_RHYTHM_CLEAR_VO.mp3',
+                './assets/audio/sfx/win/shout/SE_SHOUT.mp3'
             ],
             ksm: [
-                '../assets/audio/sfx/win/ksm/full_combo_001_01.mp3',
-                '../assets/audio/sfx/win/ksm/full_combo_001_02.mp3',
-                '../assets/audio/sfx/win/ksm/full_combo_001_03.mp3'
+                './assets/audio/sfx/win/ksm/full_combo_001_01.mp3',
+                './assets/audio/sfx/win/ksm/full_combo_001_02.mp3',
+                './assets/audio/sfx/win/ksm/full_combo_001_03.mp3'
             ],
             failed: [
-                '../assets/audio/sfx/failed/SE_19_6_46_AYAECHO.mp3',
-                '../assets/audio/sfx/failed/SE_31_4_21_AKOECHO.mp3',
-                '../assets/audio/sfx/failed/SE_DRAM_ROLL.mp3',
-                '../assets/audio/sfx/failed/SE_GUITAR_DROP.mp3',
-                '../assets/audio/sfx/failed/SE_GUITER_SHARP.mp3',
-                '../assets/audio/sfx/failed/SE_KASUMI_GT.mp3',
-                '../assets/audio/sfx/failed/SE_KIRAKIRABOSHI.mp3',
-                '../assets/audio/sfx/failed/SE_LIVE_BEYOND_OUTOLO.mp3',
-                '../assets/audio/sfx/failed/SE_MINSTREL_SKILL.mp3',
-                '../assets/audio/sfx/failed/SE_MOKA_GUITAR2.mp3',
-                '../assets/audio/sfx/failed/SE_PIANO_PRACTICE_LAST.mp3',
-                '../assets/audio/sfx/failed/SE_PIANO_RANDOM.mp3',
-                '../assets/audio/sfx/failed/SE_RIMI_BA.mp3',
-                '../assets/audio/sfx/failed/SE_SCHOOL_BELL_SHORT.mp3',
-                '../assets/audio/sfx/failed/SE_SING_BELL.mp3',
-                '../assets/audio/sfx/failed/SE_SOFARA.mp3',
-                '../assets/audio/sfx/failed/SE_TELOP.mp3',
-                '../assets/audio/sfx/failed/SE_TOASTER.mp3',
-                '../assets/audio/sfx/failed/SE_UKULELE.mp3',
-                '../assets/audio/sfx/failed/SE_VIOLIN_SHORT.mp3',
-                '../assets/audio/sfx/failed/SE_WHISTLE.mp3'
+                './assets/audio/sfx/failed/SE_19_6_46_AYAECHO.mp3',
+                './assets/audio/sfx/failed/SE_31_4_21_AKOECHO.mp3',
+                './assets/audio/sfx/failed/SE_DRAM_ROLL.mp3',
+                './assets/audio/sfx/failed/SE_GUITAR_DROP.mp3',
+                './assets/audio/sfx/failed/SE_GUITER_SHARP.mp3',
+                './assets/audio/sfx/failed/SE_KASUMI_GT.mp3',
+                './assets/audio/sfx/failed/SE_KIRAKIRABOSHI.mp3',
+                './assets/audio/sfx/failed/SE_LIVE_BEYOND_OUTOLO.mp3',
+                './assets/audio/sfx/failed/SE_MINSTREL_SKILL.mp3',
+                './assets/audio/sfx/failed/SE_MOKA_GUITAR2.mp3',
+                './assets/audio/sfx/failed/SE_PIANO_PRACTICE_LAST.mp3',
+                './assets/audio/sfx/failed/SE_PIANO_RANDOM.mp3',
+                './assets/audio/sfx/failed/SE_RIMI_BA.mp3',
+                './assets/audio/sfx/failed/SE_SCHOOL_BELL_SHORT.mp3',
+                './assets/audio/sfx/failed/SE_SING_BELL.mp3',
+                './assets/audio/sfx/failed/SE_SOFARA.mp3',
+                './assets/audio/sfx/failed/SE_TELOP.mp3',
+                './assets/audio/sfx/failed/SE_TOASTER.mp3',
+                './assets/audio/sfx/failed/SE_UKULELE.mp3',
+                './assets/audio/sfx/failed/SE_VIOLIN_SHORT.mp3',
+                './assets/audio/sfx/failed/SE_WHISTLE.mp3'
             ],
-            blackjack: '../assets/audio/sfx/bingo/SE_RHYTHM_FULLCOMBO.mp3',
-            double: '../assets/audio/sfx/bingo/SE_AREA_ITEM_INSTALLATION.mp3',
-            chip: '../assets/audio/sfx/short/SE_BOTTLE_CHEERS.mp3',
-            hit: '../assets/audio/sfx/bingo/2021birthday_01.mp3',
-            bust: '../assets/audio/sfx/bomb/SE_GUITAR_HIT_2.mp3',
-            deal: '../assets/audio/sfx/short/SE_JUGGLING.mp3',
-            flip: '../assets/audio/sfx/short/SE_POPS_OUT.mp3',
-            stand: '../assets/audio/sfx/short/SE_HEART_FLY.mp3'
+            blackjack: './assets/audio/sfx/bingo/SE_RHYTHM_FULLCOMBO.mp3',
+            double: './assets/audio/sfx/bingo/SE_AREA_ITEM_INSTALLATION.mp3',
+            chip: './assets/audio/sfx/short/SE_BOTTLE_CHEERS.mp3',
+            hit: './assets/audio/sfx/bingo/2021birthday_01.mp3',
+            bust: './assets/audio/sfx/bomb/SE_GUITAR_HIT_2.mp3',
+            deal: './assets/audio/sfx/short/SE_JUGGLING.mp3',
+            flip: './assets/audio/sfx/short/SE_POPS_OUT.mp3',
+            stand: './assets/audio/sfx/short/SE_HEART_FLY.mp3'
         };
         
         this.audioCache = new Map();
@@ -217,25 +219,56 @@ class AudioSystem {
     /**
      * 播放胜利音效
      * @returns {void}
-     * @description 播放胜利音效和欢呼音效
+     * @description 播放胜利音效和欢呼音效，根据设置过滤香澄音效
      */
     playWinSound() {
-        const winIndex = this.getRandomIndex(this.soundPaths.win, 'win');
+        let availableWinSounds = this.soundPaths.win;
+        
+        if (!this.kasumiWinSound) {
+            availableWinSounds = this.soundPaths.win.filter(path => !path.includes('KASUMI'));
+            if (availableWinSounds.length === 0) {
+                availableWinSounds = this.soundPaths.win;
+            }
+        }
+        
+        const winIndex = this.getRandomIndex(availableWinSounds, 'win');
         const shoutIndex = this.getRandomIndex(this.soundPaths.winShout, 'winShout');
         const ksmIndex = this.getRandomIndex(this.soundPaths.ksm, 'ksm');
         
-        console.log('播放胜利音效:', this.soundPaths.win[winIndex]);
-        this.playAudioFile(this.soundPaths.win[winIndex]);
+        console.log('播放胜利音效:', availableWinSounds[winIndex]);
+        this.playAudioFile(availableWinSounds[winIndex]);
         
         setTimeout(() => {
             console.log('播放欢呼音效:', this.soundPaths.winShout[shoutIndex]);
             this.playAudioFile(this.soundPaths.winShout[shoutIndex]);
             
-            setTimeout(() => {
-                console.log('播放KSM音效:', this.soundPaths.ksm[ksmIndex]);
-                this.playAudioFile(this.soundPaths.ksm[ksmIndex]);
-            }, 300);
+            if (this.kasumiWinSound) {
+                setTimeout(() => {
+                    console.log('播放KSM音效:', this.soundPaths.ksm[ksmIndex]);
+                    this.playAudioFile(this.soundPaths.ksm[ksmIndex]);
+                }, 300);
+            }
         }, 100);
+    }
+
+    /**
+     * 设置香澄胜利音效开关
+     * @param {boolean} enabled - 是否启用
+     * @returns {void}
+     * @description 设置是否播放香澄的胜利音效
+     */
+    setKasumiWinSound(enabled) {
+        this.kasumiWinSound = enabled;
+    }
+
+    /**
+     * 设置表情包语音音量
+     * @param {number} value - 音量值 (0-1)
+     * @returns {void}
+     * @description 设置表情包语音音量
+     */
+    setStampVolume(value) {
+        this.volumes.stamp = Math.max(0, Math.min(1, value));
     }
 
     /**
@@ -334,7 +367,8 @@ class AudioSystem {
     exportSettings() {
         return {
             isMuted: this.isMuted,
-            volumes: { ...this.volumes }
+            volumes: { ...this.volumes },
+            kasumiWinSound: this.kasumiWinSound
         };
     }
 
@@ -349,6 +383,21 @@ class AudioSystem {
             this.isMuted = settings.isMuted || false;
             if (settings.volumes) {
                 this.volumes = { ...this.volumes, ...settings.volumes };
+            }
+            if (settings.kasumiWinSound !== undefined) {
+                this.kasumiWinSound = settings.kasumiWinSound;
+            }
+            if (settings.stampVoice !== undefined) {
+                if (this.volumes.stamp === undefined || this.volumes.stamp === null) {
+                    if (typeof settings.stampVoice === 'boolean') {
+                        this.volumes.stamp = settings.stampVoice ? 0.5 : 0;
+                    } else if (typeof settings.stampVoice === 'number') {
+                        this.volumes.stamp = settings.stampVoice;
+                    }
+                }
+            }
+            if (this.volumes.stamp === undefined || this.volumes.stamp === null) {
+                this.volumes.stamp = this.config.AUDIO.STAMP_VOLUME;
             }
         }
     }
