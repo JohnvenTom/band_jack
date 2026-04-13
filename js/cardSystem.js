@@ -127,13 +127,49 @@ class CardSystem {
     /**
      * 发一张牌
      * @returns {Object|null} 卡牌对象
-     * @description 从牌组顶部抽取一张牌
+     * @description 从牌组顶部抽取一张牌，并提前预加载对应的角色图片
      */
     dealCard() {
         if (this.deck.length === 0) {
             this.createDeck();
         }
-        return this.deck.pop();
+        const card = this.deck.pop();
+        if (card) {
+            this.preloadCardImage(card);
+        }
+        return card;
+    }
+
+    /**
+     * 预加载卡牌对应的角色图片
+     * @param {Object} card - 卡牌对象
+     * @description 在翻牌前提前加载角色图片
+     */
+    preloadCardImage(card) {
+        if (!card || !card.character) return;
+        
+        try {
+            // 选择一张随机的角色图片
+            const availableCards = this.getAvailableCharacterCards(card.character.name);
+            if (availableCards.length > 0) {
+                const randomCard = availableCards[Math.floor(Math.random() * availableCards.length)];
+                // 保存选中的图片文件名到卡牌对象中
+                card.preloadedImage = randomCard;
+                
+                // 使用动态图片加载器预加载
+                if (window.dynamicImageLoader) {
+                    window.dynamicImageLoader.loadImage(randomCard).catch(err => {
+                        console.warn('[CardSystem] 图片预加载失败:', err);
+                    });
+                } else {
+                    // 降级方案：直接创建Image对象预加载
+                    const img = new Image();
+                    img.src = `${this.config.PATHS.FACES}Popin%27Party/${randomCard}`;
+                }
+            }
+        } catch (error) {
+            console.warn('[CardSystem] 预加载图片时出错:', error);
+        }
     }
 
     /**
@@ -185,10 +221,19 @@ class CardSystem {
     /**
      * 获取角色卡牌图片路径
      * @param {string} characterName - 角色名称
+     * @param {Object} card - 卡牌对象（可选，用于获取预加载的图片）
      * @returns {string} 图片路径
-     * @description 获取角色卡牌的随机图片路径
+     * @description 获取角色卡牌的图片路径，优先使用已预加载的图片
      */
-    getCharacterImagePath(characterName) {
+    getCharacterImagePath(characterName, card = null) {
+        // 如果卡牌对象有预加载的图片，直接使用
+        if (card && card.preloadedImage) {
+            const path = `${this.config.PATHS.FACES}Popin%27Party/${card.preloadedImage}`;
+            console.log(`[CardSystem] 使用预加载图片: ${path}`);
+            return path;
+        }
+        
+        // 否则随机选择一张
         const availableCards = this.getAvailableCharacterCards(characterName);
         if (availableCards.length === 0) {
             console.warn(`No cards found for character: ${characterName}`);
@@ -196,7 +241,7 @@ class CardSystem {
         }
         const randomCard = availableCards[Math.floor(Math.random() * availableCards.length)];
         const path = `${this.config.PATHS.FACES}Popin%27Party/${randomCard}`;
-        console.log(`Character image path: ${path}`);
+        console.log(`[CardSystem] 使用随机图片: ${path}`);
         return path;
     }
 
@@ -314,7 +359,7 @@ class CardSystem {
         characterEl.className = 'card-character';
         
         if (card.character) {
-            const imgPath = this.getCharacterImagePath(card.character.name);
+            const imgPath = this.getCharacterImagePath(card.character.name, card);
             if (imgPath) {
                 const img = document.createElement('img');
                 img.src = imgPath;

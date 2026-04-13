@@ -213,6 +213,7 @@ class PreloadUI {
         this.statusText = null;
         this.particles = [];
         this.isAnimating = false;
+        this.hasTriggeredComplete = false;
     }
 
     /**
@@ -264,7 +265,24 @@ class PreloadUI {
                     <div class="tip-text">正在为您准备精彩的游戏体验...</div>
                 </div>
 
+                <button class="skip-button" id="skip-button">
+                    <span class="skip-icon">▶️</span>
+                    <span class="skip-text">跳过加载</span>
+                </button>
+
                 <div class="preloader-particles" id="preloader-particles"></div>
+            </div>
+            
+            <!-- 迷你模式 -->
+            <div class="preloader-mini" id="preloader-mini">
+                <div class="mini-icon">🎸</div>
+                <div class="mini-progress">
+                    <div class="mini-progress-bar">
+                        <div class="mini-progress-fill" id="mini-progress-fill"></div>
+                    </div>
+                    <span class="mini-percent" id="mini-percent">0%</span>
+                </div>
+                <button class="mini-close" id="mini-close">✕</button>
             </div>
         `;
 
@@ -277,6 +295,15 @@ class PreloadUI {
         this.imageProgress = this.container.querySelector('#image-progress');
         this.audioProgress = this.container.querySelector('#audio-progress');
         this.particlesContainer = this.container.querySelector('#preloader-particles');
+        this.skipButton = this.container.querySelector('#skip-button');
+        this.miniContainer = this.container.querySelector('#preloader-mini');
+        this.miniProgressFill = this.container.querySelector('#mini-progress-fill');
+        this.miniPercent = this.container.querySelector('#mini-percent');
+        this.miniClose = this.container.querySelector('#mini-close');
+        
+        // 绑定跳过按钮事件
+        this.skipButton.addEventListener('click', () => this.onSkip());
+        this.miniClose.addEventListener('click', () => this.hide());
     }
 
     /**
@@ -299,6 +326,14 @@ class PreloadUI {
         const percent = Math.round(data.progress);
         this.progressFill.style.width = `${percent}%`;
         this.progressPercent.textContent = `${percent}%`;
+        
+        // 更新迷你进度条
+        if (this.miniProgressFill) {
+            this.miniProgressFill.style.width = `${percent}%`;
+        }
+        if (this.miniPercent) {
+            this.miniPercent.textContent = `${percent}%`;
+        }
 
         // 更新详细状态
         this.imageProgress.textContent = `${data.images.loaded}/${data.images.total}`;
@@ -317,18 +352,51 @@ class PreloadUI {
     }
 
     /**
+     * 跳过加载
+     */
+    onSkip() {
+        // 切换到迷你模式
+        this.container.classList.add('mini-mode');
+        this.stopParticles();
+        
+        // 触发加载完成事件，让游戏开始
+        this.triggerCompleteEvent();
+    }
+
+    /**
+     * 安全触发完成事件（只触发一次）
+     */
+    triggerCompleteEvent() {
+        if (this.hasTriggeredComplete) return;
+        
+        this.hasTriggeredComplete = true;
+        const event = new CustomEvent('preloadComplete');
+        document.dispatchEvent(event);
+    }
+
+    /**
      * 加载完成回调
      */
     onComplete() {
         this.progressDetail.textContent = '加载完成！';
         
-        // 添加完成动画
-        this.container.classList.add('complete');
+        // 如果还没有触发完成事件（用户没有跳过），则触发
+        if (!this.hasTriggeredComplete) {
+            this.triggerCompleteEvent();
+        }
         
-        // 延迟隐藏预加载界面
-        setTimeout(() => {
-            this.hide();
-        }, 800);
+        // 如果已经在迷你模式，直接隐藏
+        if (this.container.classList.contains('mini-mode')) {
+            setTimeout(() => {
+                this.hide();
+            }, 1000);
+        } else {
+            // 否则显示完成动画后隐藏
+            this.container.classList.add('complete');
+            setTimeout(() => {
+                this.hide();
+            }, 800);
+        }
     }
 
     /**
@@ -351,10 +419,6 @@ class PreloadUI {
             if (this.container && this.container.parentNode) {
                 this.container.parentNode.removeChild(this.container);
             }
-            
-            // 触发加载完成事件
-            const event = new CustomEvent('preloadComplete');
-            document.dispatchEvent(event);
         }, 500);
     }
 
@@ -378,15 +442,26 @@ class PreloadUI {
             const particle = document.createElement('div');
             particle.className = 'preloader-particle';
             particle.textContent = icons[Math.floor(Math.random() * icons.length)];
-            particle.style.left = `${Math.random() * 100}%`;
-            particle.style.bottom = `${Math.random() * 50}px`;
-            particle.style.animationDelay = `${Math.random() * 8}s`;
-            particle.style.opacity = '0';
-            particle.style.fontSize = `${Math.random() * 20 + 16}px`;
-            this.particlesContainer.appendChild(particle);
             
-            // 存储粒子的初始状态
-            particle.dataset.initialLeft = particle.style.left;
+            // 存储粒子的动画参数
+            particle.dataset.x = Math.random() * 90 + 5; // 避免贴边
+            particle.dataset.y = Math.random() * 50 + 20; // 从底部开始
+            particle.dataset.vx = (Math.random() - 0.5) * 0.8;
+            particle.dataset.vy = Math.random() * 1.2 + 0.8; // 向上飘的速度
+            particle.dataset.rotation = Math.random() * 360;
+            particle.dataset.rotationSpeed = (Math.random() - 0.5) * 3; // 更快的随机旋转
+            particle.dataset.opacity = 0;
+            particle.dataset.fadeSpeed = Math.random() * 0.004 + 0.002; // 更慢的淡入淡出
+            particle.dataset.fadeState = 'in';
+            particle.dataset.size = Math.random() * 20 + 16;
+            particle.dataset.maxY = Math.random() * 200 + 400; // 随机的最大高度
+            
+            particle.style.left = `${particle.dataset.x}%`;
+            particle.style.bottom = `${particle.dataset.y}px`;
+            particle.style.opacity = '0';
+            particle.style.fontSize = `${particle.dataset.size}px`;
+            
+            this.particlesContainer.appendChild(particle);
             this.particles.push(particle);
         }
     }
@@ -398,21 +473,81 @@ class PreloadUI {
         if (!this.isAnimating) return;
 
         this.particles.forEach((particle) => {
-            if (Math.random() < 0.015) {
-                const height = Math.random() * 250 + 100;
-                const horizontal = (Math.random() - 0.5) * 200;
-                const rotation = Math.random() * 720 - 360;
-                const duration = Math.random() * 2000 + 3000;
-                
-                particle.style.opacity = Math.random() * 0.7 + 0.3;
-                particle.style.transition = `all ${duration}ms cubic-bezier(0.25, 0.46, 0.45, 0.94)`;
-                particle.style.transform = `translate(${horizontal}px, -${height}px) rotate(${rotation}deg) scale(${Math.random() * 0.5 + 0.5})`;
-                
-                setTimeout(() => {
-                    particle.style.opacity = '0';
-                    particle.style.transform = 'translateY(0) rotate(0deg) scale(1)';
-                }, duration);
+            let x = parseFloat(particle.dataset.x);
+            let y = parseFloat(particle.dataset.y);
+            let vx = parseFloat(particle.dataset.vx);
+            let vy = parseFloat(particle.dataset.vy);
+            let rotation = parseFloat(particle.dataset.rotation);
+            let rotationSpeed = parseFloat(particle.dataset.rotationSpeed);
+            let opacity = parseFloat(particle.dataset.opacity);
+            let fadeSpeed = parseFloat(particle.dataset.fadeSpeed);
+            let fadeState = particle.dataset.fadeState;
+            let maxY = parseFloat(particle.dataset.maxY);
+            
+            // 更新位置
+            x += vx;
+            y += vy;
+            rotation += rotationSpeed;
+            
+            // 边界检测和反弹
+            if (x < 5) {
+                x = 5;
+                vx = -vx;
+                particle.dataset.vx = vx;
             }
+            if (x > 95) {
+                x = 95;
+                vx = -vx;
+                particle.dataset.vx = vx;
+            }
+            
+            // 淡入淡出逻辑
+            if (fadeState === 'in') {
+                opacity += fadeSpeed;
+                if (opacity >= 0.9) {
+                    opacity = 0.9;
+                    fadeState = 'hold';
+                    particle.dataset.holdTime = Math.random() * 200 + 100; // 随机保持时间
+                }
+            } else if (fadeState === 'hold') {
+                let holdTime = parseFloat(particle.dataset.holdTime) || 0;
+                holdTime--;
+                particle.dataset.holdTime = holdTime;
+                if (holdTime <= 0 || y > maxY) {
+                    fadeState = 'out';
+                }
+            } else {
+                opacity -= fadeSpeed;
+                if (opacity <= 0) {
+                    opacity = 0;
+                    // 重置到起点
+                    x = Math.random() * 90 + 5;
+                    y = Math.random() * 50 + 20;
+                    vy = Math.random() * 1.2 + 0.8;
+                    vx = (Math.random() - 0.5) * 0.8;
+                    rotationSpeed = (Math.random() - 0.5) * 3;
+                    maxY = Math.random() * 200 + 400;
+                    fadeState = 'in';
+                    
+                    particle.dataset.vx = vx;
+                    particle.dataset.vy = vy;
+                    particle.dataset.rotationSpeed = rotationSpeed;
+                    particle.dataset.maxY = maxY;
+                }
+            }
+            
+            // 保存数据
+            particle.dataset.x = x;
+            particle.dataset.y = y;
+            particle.dataset.rotation = rotation;
+            particle.dataset.opacity = opacity;
+            particle.dataset.fadeState = fadeState;
+            
+            // 应用样式
+            particle.style.left = `${x}%`;
+            particle.style.bottom = `${y}px`;
+            particle.style.opacity = opacity;
+            particle.style.transform = `rotate(${rotation}deg)`;
         });
 
         requestAnimationFrame(() => this.animateParticles());
@@ -426,6 +561,107 @@ class PreloadUI {
     }
 }
 
+/**
+ * 动态图片加载管理器
+ * @description 用于在游戏运行时动态加载图片，避免预加载过多资源
+ */
+class DynamicImageLoader {
+    constructor() {
+        this.loadedImages = new Map();
+        this.loadingPromises = new Map();
+        this.basePath = './assets/art/cards/faces/Popin\'Party';
+    }
+
+    /**
+     * 预加载单张图片
+     * @param {string} filename - 图片文件名
+     * @returns {Promise<HTMLImageElement>} 加载完成的图片对象
+     */
+    loadImage(filename) {
+        // 如果已经加载过，直接返回
+        if (this.loadedImages.has(filename)) {
+            return Promise.resolve(this.loadedImages.get(filename));
+        }
+
+        // 如果正在加载，返回现有Promise
+        if (this.loadingPromises.has(filename)) {
+            return this.loadingPromises.get(filename);
+        }
+
+        // 创建新的加载Promise
+        const promise = new Promise((resolve, reject) => {
+            const img = new Image();
+            const fullPath = `${this.basePath}/${filename}`;
+
+            img.onload = () => {
+                this.loadedImages.set(filename, img);
+                this.loadingPromises.delete(filename);
+                resolve(img);
+            };
+
+            img.onerror = (error) => {
+                this.loadingPromises.delete(filename);
+                console.warn(`[DynamicImageLoader] 图片加载失败: ${fullPath}`);
+                reject(error);
+            };
+
+            img.src = fullPath;
+        });
+
+        this.loadingPromises.set(filename, promise);
+        return promise;
+    }
+
+    /**
+     * 批量预加载图片
+     * @param {string[]} filenames - 图片文件名数组
+     * @returns {Promise<void>}
+     */
+    async loadImages(filenames) {
+        const promises = filenames.map(filename => this.loadImage(filename));
+        await Promise.allSettled(promises);
+    }
+
+    /**
+     * 获取已加载的图片
+     * @param {string} filename - 图片文件名
+     * @returns {HTMLImageElement|null} 图片对象或null
+     */
+    getImage(filename) {
+        return this.loadedImages.get(filename) || null;
+    }
+
+    /**
+     * 检查图片是否已加载
+     * @param {string} filename - 图片文件名
+     * @returns {boolean}
+     */
+    isLoaded(filename) {
+        return this.loadedImages.has(filename);
+    }
+
+    /**
+     * 清除所有缓存
+     */
+    clearCache() {
+        this.loadedImages.clear();
+        this.loadingPromises.clear();
+    }
+
+    /**
+     * 获取加载状态
+     * @returns {Object} 状态信息
+     */
+    getStatus() {
+        return {
+            loaded: this.loadedImages.size,
+            loading: this.loadingPromises.size
+        };
+    }
+}
+
 // 导出到全局
 window.ResourcePreloader = ResourcePreloader;
 window.PreloadUI = PreloadUI;
+window.DynamicImageLoader = DynamicImageLoader;
+window.dynamicImageLoader = new DynamicImageLoader();

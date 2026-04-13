@@ -2641,3 +2641,148 @@ body::before {
         justify-content: center;
     }
 }
+
+/* 跳过按钮 */
+.skip-button {
+    margin-top: 20px;
+    padding: 12px 30px;
+    background: linear-gradient(135deg, #FFB6C1 0%, #DCD0FF 100%);
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Noto Sans SC', 'Quicksand', sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+    color: #5D5A6D;
+    box-shadow: 0 4px 15px rgba(255, 182, 193, 0.3);
+    transition: all 0.3s ease;
+}
+
+.skip-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 182, 193, 0.4);
+}
+
+.skip-button:active {
+    transform: translateY(0);
+}
+
+.skip-icon {
+    font-size: 16px;
+}
+
+/* 迷你模式容器 */
+.preloader-mini {
+    display: none;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: 12px 16px;
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.98) 0%, rgba(255, 248, 240, 0.98) 100%);
+    border-radius: 16px;
+    box-shadow: 0 8px 30px rgba(150, 130, 160, 0.25);
+    align-items: center;
+    gap: 12px;
+    z-index: 9998;
+    transition: all 0.3s ease;
+    opacity: 0;
+    transform: translateY(20px);
+}
+
+#preloader-container.mini-mode .preloader-mini {
+    display: flex;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* 迷你模式激活状态 */
+#preloader-container.mini-mode .preloader-content {
+    display: none;
+}
+
+#preloader-container.mini-mode .preloader-particles {
+    display: none;
+}
+
+#preloader-container.mini-mode {
+    background: transparent;
+    pointer-events: none;
+}
+
+#preloader-container.mini-mode .preloader-mini {
+    pointer-events: auto;
+}
+
+/* 迷你模式元素 */
+.mini-icon {
+    font-size: 28px;
+}
+
+.mini-progress {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.mini-progress-bar {
+    width: 100px;
+    height: 6px;
+    background: rgba(150, 130, 160, 0.2);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.mini-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #FFB6C1 0%, #DCD0FF 100%);
+    border-radius: 3px;
+    width: 0%;
+    transition: width 0.3s ease;
+}
+
+.mini-percent {
+    font-size: 12px;
+    font-weight: 500;
+    color: #8A8698;
+}
+
+.mini-close {
+    width: 24px;
+    height: 24px;
+    border: none;
+    background: rgba(150, 130, 160, 0.15);
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    color: #8A8698;
+    transition: all 0.3s ease;
+}
+
+.mini-close:hover {
+    background: rgba(150, 130, 160, 0.25);
+    transform: scale(1.1);
+}
+
+/* 移动端迷你模式适配 */
+@media (max-width: 480px) {
+    .preloader-mini {
+        bottom: 15px;
+        right: 15px;
+        left: 15px;
+        padding: 10px 14px;
+    }
+    
+    .mini-progress-bar {
+        flex: 1;
+    }
+    
+    .mini-icon {
+        font-size: 24px;
+    }
+}
